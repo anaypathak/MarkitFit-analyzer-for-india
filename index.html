@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MarketFit Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        background: #0b0b0b;
+        color: #e5e5e5;
+      }
+      .panel {
+        background: #141414;
+        border: 1px solid #2a2a2a;
+      }
+      .input-dark {
+        background: #1a1a1a;
+        color: #e5e5e5;
+        border: 1px solid #2a2a2a;
+        padding: 0.6rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.9rem;
+      }
+      .input-dark:focus {
+        outline: none;
+        border-color: #ffffff;
+      }
+      .output-section {
+        border-bottom: 1px solid #2a2a2a;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+      }
+      .output-title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: #818cf8; /* tailwind-indigo-400 */
+      }
+      .output-subtitle {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-top: 0.75rem;
+        margin-bottom: 0.25rem;
+        color: #a5b4fc; /* tailwind-indigo-300 */
+      }
+      .output-text {
+        margin-left: 1rem;
+        color: #d1d5db; /* tailwind-gray-300 */
+        white-space: pre-wrap;
+      }
+      .output-list {
+        margin-left: 1.5rem;
+        list-style-type: disc;
+        color: #d1d5db;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen">
+    <div class="max-w-7xl mx-auto py-10 px-6">
+      <h1 class="text-3xl font-bold mb-6 tracking-tight">MarketFit Product Analyzer</h1>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- LEFT PANEL: FORM -->
+        <div class="panel rounded-xl p-6 overflow-y-auto max-h-[85vh]">
+          <h2 class="text-xl mb-6 font-semibold">Product Information</h2>
+
+          <form id="productForm" class="space-y-5">
+            <div>
+              <label class="text-sm block">Product Name</label>
+              <input
+                id="product_name"
+                class="input-dark w-full"
+                type="text"
+                placeholder="ZenAir Mini"
+              />
+            </div>
+
+            <div>
+              <label class="text-sm block">Category</label>
+              <input
+                id="category"
+                class="input-dark w-full"
+                type="text"
+                placeholder="Portable Air Purifier"
+              />
+            </div>
+
+            <div>
+              <label class="text-sm block">Price (INR)</label>
+              <input
+                id="price_in_inr"
+                class="input-dark w-full"
+                type="number"
+                placeholder="12999"
+              />
+            </div>
+
+            <div>
+              <label class="text-sm block">Target Users</label>
+              <input
+                id="target_users"
+                class="input-dark w-full"
+                type="text"
+                placeholder="Students, office workers"
+              />
+            </div>
+
+            <div>
+              <label class="text-sm block">Product Description</label>
+              <textarea
+                id="product_description"
+                class="input-dark w-full"
+                rows="3"
+                placeholder="Describe the product..."
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="text-sm block">Key Features (comma separated)</label>
+              <input
+                id="key_features"
+                class="input-dark w-full"
+                type="text"
+                placeholder="HEPA filter, USB-C powered, Low noise"
+              />
+            </div>
+
+            <div>
+              <label class="text-sm block">USP</label>
+              <input
+                id="usp"
+                class="input-dark w-full"
+                type="text"
+                placeholder="Lightweight with cheap filters"
+              />
+            </div>
+
+            <div>
+              <label class="text-sm block">Selling Channels</label>
+              <select id="selling_channels" class="input-dark w-full">
+                <option>Online</option>
+                <option>Offline</option>
+                <option>Online and Offline</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="text-sm block">Target Cities</label>
+              <select id="target_cities" class="input-dark w-full">
+                <option>Tier 1</option>
+                <option>Tier 2</option>
+                <option>Tier 3</option>
+                <option>Tier 1 and Tier 2</option>
+                <option>Tier 2 and Tier 3</option>
+                <option>All Tiers</option>
+              </select>
+            </div>
+
+            <button
+              id="btnAnalyze"
+              class="w-full mt-4 py-2 bg-white text-black font-semibold rounded-md hover:bg-gray-200 transition"
+            >
+              Analyze Product
+            </button>
+          </form>
+        </div>
+
+        <!-- RIGHT PANEL: OUTPUT -->
+        <div
+          id="outputPanel"
+          class="panel rounded-xl p-6 overflow-y-auto max-h-[85vh] text-gray-300" >
+          <a style="color: rgb(61, 61, 190);" href="/download-json">Download JSON</a>
+          <h2 class="text-xl mb-4 font-semibold">MarketFit Analysis Results</h2>
+          <div id="analysisContent">Analysis output will appear here after submission.</div>
+        </div>
+
+                <!-- changed code: Market Competitors Card -->
+            <div class="mt-6 p-4 bg-indigo-950 border border-indigo-700 rounded-lg">
+              <h3 class="text-lg font-semibold text-indigo-300 mb-3">Market Competitors</h3>
+              <div id="comp" class="space-y-2">
+                Competitors will be listed here...
+                
+              </div>
+            </div>
+
+            <!-- changed code: AI Success Prediction Score Card -->
+            <div class="mt-4 p-4 bg-green-950 border border-green-700 rounded-lg">
+              <h3 class="text-lg font-semibold text-green-300 mb-3">Success Prediction Score (0–100)</h3>
+              <div class="space-y-3">
+                <div id="marketany">
+                  <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-300" >Market Fit</span>
+                    <span class="text-green-300 font-semibold" id="marketfitno">78/100</span>
+                  </div>
+                  <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div class="bg-green-500 h-2 rounded-full" id="marketfitwidth" style="width: 78%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-300">Pricing Strategy</span>
+                    <span class="text-green-300 font-semibold" id="pricing">65/100</span>
+                  </div>
+                  <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div class="bg-green-500 h-2 rounded-full" id="pricingwidth" style="width: 65%"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm mb-1">
+                    <span class="text-gray-300">Adoption Potential</span>
+                    <span class="text-green-300 font-semibold" id="adop">82/100</span>
+                  </div>
+                  <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div class="bg-green-500 h-2 rounded-full" id="adopwidth"  style="width: 82%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+      </div>
+    </div>
+
+    <script>
+   const comp = document.getElementById('comp');
+  
+
+      const get = (id) => document.getElementById(id);
+      const analysisContent = get('analysisContent');
+
+      function createSection(title, content) {
+        const section = document.createElement('div');
+        section.className = 'output-section';
+
+        const h3 = document.createElement('h3');
+        h3.className = 'output-title';
+        h3.textContent = title;
+        section.appendChild(h3);
+
+        if (typeof content === 'string') {
+          const p = document.createElement('p');
+          p.className = 'output-text';
+          p.textContent = content;
+          section.appendChild(p);
+        } else if (Array.isArray(content)) {
+          const ul = document.createElement('ul');
+          ul.className = 'output-list';
+          content.forEach((item) => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            ul.appendChild(li);
+          });
+          section.appendChild(ul);
+        } else if (typeof content === 'object' && content !== null) {
+          for (const key in content) {
+            if (content.hasOwnProperty(key)) {
+              const subTitle = document.createElement('h4');
+              subTitle.className = 'output-subtitle';
+              subTitle.textContent = key.replace(/_/g, ' ');
+              section.appendChild(subTitle);
+
+              const subContent = content[key];
+              if (typeof subContent === 'string' || typeof subContent === 'number') {
+                const p = document.createElement('p');
+                p.className = 'output-text';
+                p.textContent = subContent.toString();
+                section.appendChild(p);
+              } else if (Array.isArray(subContent)) {
+                const ul = document.createElement('ul');
+                ul.className = 'output-list';
+                subContent.forEach((item) => {
+                  const li = document.createElement('li');
+                  li.textContent = item;
+                  ul.appendChild(li);
+                });
+                section.appendChild(ul);
+              }
+            }
+          }
+        }
+        return section;
+      }
+
+      get('btnAnalyze').addEventListener('click', async (e) => {
+        e.preventDefault();
+        analysisContent.innerHTML = '<p>Analyzing product... Please wait...</p>';
+        comp.innerHTML = '<p>Loading competitors... Please wait...</p>';
+        const data = {
+          product_name: get('product_name').value.trim(),
+          category: get('category').value.trim(),
+          price_in_inr: Number(get('price_in_inr').value),
+          target_users: get('target_users').value.trim(),
+          product_description: get('product_description').value.trim(),
+          key_features: get('key_features')
+            .value.split(',')
+            .map((x) => x.trim())
+            .filter(Boolean),
+          usp: get('usp').value.trim(),
+          selling_channels: get('selling_channels').value,
+          target_cities: get('target_cities').value,
+        };
+
+        try {
+       
+          const response = await fetch('/analyze-product', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) throw new Error('Network response was not ok');
+
+          const output = await response.json();
+          analysisContent.innerHTML = '';
+          for (const section of Object.keys(output)) {
+            analysisContent.appendChild(createSection(section, output[section]));
+          }
+        } catch (err) {
+          analysisContent.textContent = 'Error: ' + err.message;
+        }
+    const marketany = document.getElementById('marketany');
+    const compt = fetch('/additional-info', {
+            method: 'GET',
+        }).then(response => response.json())
+        .then(data => {
+            comp.innerHTML = ''; // clear or show a loading state before fill
+            // changed code: use correct property names and fix typo
+            (data?.market_competitors?.competitor_list || []).forEach((item,index )=> {
+
+              console.log(data)
+              if(index == data?.market_competitors?.competitor_list.length -1){
+                console.log(data)
+                   const div = document.createElement('div');
+                div.className = 'p-2 bg-black rounded text-sm text-gray-300';
+                div.textContent = `Market Saturation: ${data.market_competitors.market_saturation} `;
+                comp.appendChild(div);
+              }else{
+
+              
+                const div = document.createElement('div');
+                div.className = 'p-2 bg-indigo-900 rounded text-sm text-gray-300';
+                div.textContent = '• ' + (item.product_name || item.product_name) 
+                                  + ' - ' + (item.company_name || item.company_name) 
+                                  + ' - ' + (item.price_range || '')+ '-'+ (item.market_share || '');
+                comp.appendChild(div);
+
+                
+                const marketfitno = document.getElementById("marketfitno")
+                const marketfitweidth = document.getElementById("marketfitwidth")
+                const pricing = document.getElementById("pricing")
+                const pricingwidth = document.getElementById("pricingwidth")
+                const adop = document.getElementById("adop")
+                const adopwidth = document.getElementById("adopwidth")
+
+                for(let objkey in data.ai_success_scores){
+                 
+                  if(objkey == "market_fit_score"){
+
+                  marketfitno.innerHTML = `${data.ai_success_scores[objkey]}/100`;
+                  marketfitweidth.style.width = `${data.ai_success_scores[objkey]}%`;
+
+
+
+                  }else if(objkey == "pricing_strategy_score"){
+                      pricing.innerHTML = `${data.ai_success_scores[objkey]}/100`;
+                      pricingwidth.style.width = `${data.ai_success_scores[objkey]}%`;
+
+                  }else if(objkey == "adoption_potential_score"){
+                     adop.innerHTML = `${data.ai_success_scores[objkey]}/100`;
+                      adopwidth.style.width = `${data.ai_success_scores[objkey]}%`;
+                  }
+                }
+
+              }
+                
+
+
+            });
+        }).catch(err => {
+            comp.innerHTML = 'Failed to load competitors';
+            console.error(err);
+        });
+      });
+    </script>
+  </body>
+</html>

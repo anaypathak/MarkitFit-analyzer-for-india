@@ -1,0 +1,27 @@
+{
+  "name": "indian-fit-products",
+  "version": "1.0.0",
+  "description": "An Agentic Ai which finds the product fit in market ",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@google/genai": "^1.30.0",
+    "@perplexity-ai/perplexity_ai": "^0.16.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
+    "fs": "^0.0.1-security",
+    "zod": "^4.1.12",
+    "zod-to-json-schema": "^3.25.0"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
+}
